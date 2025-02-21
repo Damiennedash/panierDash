@@ -15,7 +15,7 @@ Clonage du projet
 sh
 Copier
 Modifier
-git clone https://github.com/ton-repo/vide-greniers-digital.git  
+git clone https://github.com/ton-repo/panierDash.git  
 cd vide-greniers-digital  
 Configuration
 Importer la base de données SQL fournie dans ton serveur MySQL
