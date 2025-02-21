@@ -11,6 +11,8 @@ require_once 'config.php';
 $searchTerm = isset($_GET['search']) ? trim($_GET['search']) : '';
 $selectedCategory = isset($_GET['category']) ? intval($_GET['category']) : null;
 
+$user_id = $_SESSION['user_id']; // L'ID utilisateur est aussi l'ID étudiant
+
 // 🔹 Récupérer les catégories
 $categorySql = "SELECT * FROM categories";
 $categoryStmt = $pdo->query($categorySql);
@@ -21,7 +23,8 @@ $params = [];
 $productSql = "SELECT p.*, c.name AS category_name 
                FROM products p 
                LEFT JOIN categories c ON p.id_category = c.id_category 
-               WHERE p.available_quantity > 0";
+               LEFT JOIN merchants m ON p.id_merchant = m.id_user  
+               WHERE p.available_quantity > 0 AND m.abonnement = 'confirmed'"; 
 
 if (!empty($searchTerm)) {
     $productSql .= " AND (p.product_name LIKE :search OR p.description LIKE :search)";
@@ -39,15 +42,17 @@ $products = $productStmt->fetchAll(PDO::FETCH_ASSOC);
 
 // 🔹 Traitement de la commande
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_product']) && isset($_POST['quantity'])) {
-    $id_student = $_SESSION['user_id'];
     $id_product = intval($_POST['id_product']);
     $quantity = intval($_POST['quantity']);
 
-    // Vérifier si le produit existe et est disponible
-    $productSql = "SELECT p.id_product, p.product_name, p.price, p.image, p.description, c.name AS category_name, p.id_merchant, p.available_quantity 
+    // ✅ Vérifier si le produit existe et est disponible
+    $productSql = "SELECT p.id_product, p.product_name, p.price, p.image, p.description, 
+                          c.name AS category_name, p.id_merchant, p.available_quantity 
                    FROM products p
                    LEFT JOIN categories c ON p.id_category = c.id_category
-                   WHERE p.id_product = :id_product";
+                   LEFT JOIN merchants m ON p.id_merchant = m.id_user
+                   WHERE p.id_product = :id_product AND m.abonnement = 'confirmed'";
+
     $productStmt = $pdo->prepare($productSql);
     $productStmt->bindParam(':id_product', $id_product, PDO::PARAM_INT);
     $productStmt->execute();
@@ -55,18 +60,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_product']) && isse
 
     if ($product && $product['available_quantity'] >= $quantity) {
         try {
-            // Insérer la commande
+            // ✅ Insérer la commande
             $orderSql = "INSERT INTO orders (id_student, id_product, quantity, id_user, status) 
                          VALUES (:id_student, :id_product, :quantity, :id_user, 'In Progress')";
             $orderStmt = $pdo->prepare($orderSql);
-            $orderStmt->bindParam(':id_student', $id_student, PDO::PARAM_INT);
+            $orderStmt->bindParam(':id_student', $user_id, PDO::PARAM_INT); // ID de l'étudiant (qui est aussi un utilisateur)
             $orderStmt->bindParam(':id_product', $id_product, PDO::PARAM_INT);
             $orderStmt->bindParam(':quantity', $quantity, PDO::PARAM_INT);
-            $orderStmt->bindParam(':id_user', $product['id_merchant'], PDO::PARAM_INT);  // id_merchant est l'id_user du vendeur
+            $orderStmt->bindParam(':id_user', $product['id_merchant'], PDO::PARAM_INT); // ID du marchand
+            $orderStmt->execute();
 
-            // Vérification d'exécution de la requête
-            if ($orderStmt->execute()) {
-                // Réduire la quantité disponible
+            // Réduire la quantité disponible
+            if ($orderStmt->rowCount() > 0) {
                 $updateProductSql = "UPDATE products SET available_quantity = available_quantity - :quantity WHERE id_product = :id_product";
                 $updateProductStmt = $pdo->prepare($updateProductSql);
                 $updateProductStmt->bindParam(':quantity', $quantity, PDO::PARAM_INT);
@@ -76,7 +81,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_product']) && isse
                 header("Location: student_dashboard.php?success=1");
                 exit();
             } else {
-                var_dump($orderStmt->errorInfo());  
                 echo "❌ Erreur lors de l'enregistrement de la commande.";
             }
         } catch (PDOException $e) {
@@ -103,24 +107,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_product']) && isse
     }
 
     body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
+        font-family: 'Poppins', sans-serif;
+        line-height: 1.6;
+        background: url('background.jpg') no-repeat center center/cover;
+        background-color: rgba(0, 0, 0, 0.5); /* Transparence */
+        color: #000; /* Texte en noir */
+        overflow-x: hidden;
+        min-height: 100vh; /* Assure que le body prend toute la hauteur de l'écran */
     }
 
-    /* HEADER */
+    /* Header */
     header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        background-color: #333;
+        background: linear-gradient(90deg, #FFFFFF, #467FD1, #24416B); /* Dégradé */
         color: #fff;
-        padding: 15px 0;
-        text-align: center;
+        padding: 1px 1px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        position: fixed;
+        width: 100%;
+        top: 0;
         z-index: 1000;
+        backdrop-filter: blur(10px); /* Effet de flou */
+    }
+
+    header .logo {
+        height: 50px;
+    }
+
+    header nav {
+        display: flex;
+        gap: 15px;
+    }
+
+    header nav a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: color 0.3s, transform 0.3s;
+    }
+
+    header nav a:hover {
+        color: #24416B; /* Bleu */
+        transform: translateY(-2px);
     }
 
     /* CONTAINER PRINCIPAL */
@@ -142,6 +172,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_product']) && isse
         color: white;
         padding: 20px;
         overflow-y: auto;
+        z-index: 100;
     }
 
     .sidebar h2 {
@@ -178,6 +209,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_product']) && isse
         padding: 20px;
         background: #f8f9fa;
         overflow-y: auto;
+        color: #000; /* Texte en noir */
     }
 
     /* BARRE DE RECHERCHE */
@@ -278,13 +310,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_product']) && isse
 
     .product-card img {
         width: 100%;
-        height: 150px;
+        height: 130px;
         object-fit: cover;
         border-radius: 10px;
     }
 
-    /* BOUTON DE COMMANDE */
-    .order-btn {
+     /* BOUTON DE COMMANDE */
+     .order-btn {
         display: inline-block;
         background: #28a745;
         color: white;
@@ -303,8 +335,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_product']) && isse
     .order-btn:active {
         background: #1e7e34;
         transform: translateY(2px);
-    }
-
+    } 
     /* POPUP */
     .popup-checkbox {
         display: none;
@@ -415,21 +446,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_product']) && isse
         margin-bottom: 10px;
     }
 
-    /* Alerte de succès */
-    .alert-success {
-        display: none;
-        background: #2ecc71;
-        color: #fff;
-        padding: 10px;
+    /* FOOTER */
+    footer {
+        background: #333;
+        color: white;
         text-align: center;
-        border-radius: 5px;
-        margin-top: 10px;
+        padding: 10px;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        z-index: 50;
     }
+
+    footer a {
+        color: #fff;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    footer a:hover {
+        color: #3498db;
+    }
+</style>
+
 </style>
 </head>
 <body>
     <header>
-        <h1>Vide Grenier</h1>
+        <h1>
+        <img src="logo_Dash.png" alt="Logo" class="logo"> 
+        </h1>
     </header>
 
     <div class="dashboard">
@@ -477,49 +524,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_product']) && isse
                                 <p>Prix : <?= htmlspecialchars($product['price']) ?> FCFA</p>
                                 <p>Catégorie : <?= htmlspecialchars($product['category_name']) ?></p>
                                 <form method="POST" action="student_dashboard.php" class="order-form">
-                                <input type="hidden" name="id_product" value="<?= htmlspecialchars($product['id_product']) ?>">
-    <label for="popup-trigger-<?= htmlspecialchars($product['id_product']) ?>" class="order-btn">
-        Commander
-    </label>
-</form>
+                                 <input type="hidden" name="id_product" value="<?= htmlspecialchars($product['id_product']) ?>">
+                                 <label for="popup-trigger-<?= htmlspecialchars($product['id_product']) ?>" class="order-btn">
+                                  Commander
+                                 </label>
+                                </form>
 
-<!-- INPUT CACHÉ POUR OUVRIR LE PREMIER POP-UP -->
-<input type="checkbox" id="popup-trigger-<?= htmlspecialchars($product['id_product']) ?>" class="popup-checkbox">
+                                <!-- INPUT CACHÉ POUR OUVRIR LE PREMIER POP-UP -->
+                                <input type="checkbox" id="popup-trigger-<?= htmlspecialchars($product['id_product']) ?>" class="popup-checkbox">
 
-<!-- PREMIER POP-UP - CONFIRMATION DE COMMANDE -->
-<div class="popup confirmation-popup">
-    <div class="popup-content">
-        <h3>Êtes-vous sûr de vouloir passer la commande ?</h3>
-        <div class="popup-buttons">
-            <!-- OUVRE LE DEUXIÈME POP-UP SI L'UTILISATEUR CONFIRME -->
-            <label for="operator-popup-trigger-<?= htmlspecialchars($product['id_product']) ?>" class="confirm-btn">Oui</label>
-            <!-- FERME LE POP-UP SI L'UTILISATEUR ANNULLE -->
-            <label for="popup-trigger-<?= htmlspecialchars($product['id_product']) ?>" class="cancel-btn">Non</label>
-        </div>
-    </div>
-</div>
+                                <!-- PREMIER POP-UP - CONFIRMATION DE COMMANDE -->
+                                <div class="popup confirmation-popup">
+                                   <div class="popup-content">
+                                     <h3>Êtes-vous sûr de vouloir passer la commande ?</h3>
+                                    <div class="popup-buttons">
+                                    <!-- OUVRE LE DEUXIÈME POP-UP SI L'UTILISATEUR CONFIRME -->
+                                    <label for="operator-popup-trigger-<?= htmlspecialchars($product['id_product']) ?>" class="confirm-btn">Oui</label>
+                                    <!-- FERME LE POP-UP SI L'UTILISATEUR ANNULLE -->
+                                    <label for="popup-trigger-<?= htmlspecialchars($product['id_product']) ?>" class="cancel-btn">Non</label>
+                                    </div>
+                                    </div>
+                                </div>
 
-<!-- INPUT CACHÉ POUR OUVRIR LE POP-UP CHOIX D'OPÉRATEUR -->
-<input type="checkbox" id="operator-popup-trigger-<?= htmlspecialchars($product['id_product']) ?>" class="popup-checkbox">
+                                <!-- INPUT CACHÉ POUR OUVRIR LE POP-UP CHOIX D'OPÉRATEUR -->
+                                <input type="checkbox" id="operator-popup-trigger-<?= htmlspecialchars($product['id_product']) ?>" class="popup-checkbox">
   
-<div class="popup moov-popup">
-    <div class="popup-content">
-        <h3>Finaliser la commande (Moov)</h3>
-        <form method="POST" action="student_dashboard.php">
-            <input type="hidden" name="id_product" value="<?= htmlspecialchars($product['id_product']) ?>">
-            <input type="hidden" name="operator" value="moov">
+                                <div class="popup moov-popup">
+                                    <div class="popup-content">
+                                      <h3>Finaliser la commande </h3>
+                                    <form method="POST" action="student_dashboard.php">
+                                    <input type="hidden" name="id_product" value="<?= htmlspecialchars($product['id_product']) ?>">
+                                    <input type="hidden" name="operator" value="moov">
 
-            <label for="quantity">Quantité :</label>
-            <input type="number" name="quantity" min="1" value="1">
-            <button type="submit" class="confirm-btn">Confirmer</button>
-        </form>
-        <div class="alert-success" id="success-message">Commande enregistrée avec succès !</div>
-        </form>
-    </div>
-</div>
+                                    <label for="quantity">Quantité :</label>
+                                    <input type="number" name="quantity" min="1" value="1">
+                                    <button type="submit" class="confirm-btn">Confirmer</button>
+                                    </form>
+                            
+                                    </div>
+                                </div>
 
-<!-- INPUT CACHÉ POUR FERMER LES POP-UPS -->
-<input type="checkbox" id="close-popup" class="popup-checkbox">
+                                <!-- INPUT CACHÉ POUR FERMER LES POP-UPS -->
+                                <input type="checkbox" id="close-popup" class="popup-checkbox">
 
                             </div>
                         <?php endforeach; ?>

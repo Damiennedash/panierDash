@@ -127,36 +127,65 @@ $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <title>Modifier un Article</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
         }
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 10px 0;
-            text-align: center;
+    body {
+     font-family: 'Poppins', sans-serif;
+     line-height: 1.6;
+     background: url('background.jpg') no-repeat center center/cover;
+     background-color: rgba(0, 0, 0, 0.5); /* Transparence */
+     color: #fff;
+     overflow-x: hidden;
+     min-height: 100vh; /* Assure que le body prend toute la hauteur de l'écran */
         }
-        header nav {
-            margin-top: 10px;
-        }
-        header nav a {
-            color: #fff;
-            text-decoration: none;
-            margin: 0 10px;
-        }
-        header nav a:hover {
-            text-decoration: underline;
-        }
-        .dashboard {
+
+        /* Header */
+    header {
+     background: linear-gradient(90deg,#FFFFFF, #467FD1, #24416B); /* Dégradé */
+     color: #fff;
+     padding: 15px 20px;
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+     position: fixed;
+     width: 100%;
+     top: 0;
+     z-index: 1000;
+     backdrop-filter: blur(10px); /* Effet de flou */
+    }
+
+    header .logo {
+     height: 50px;
+    }
+
+    header nav {
+     display: flex;
+     gap: 20px;
+    }
+
+    header nav a {
+     color: #fff;
+     text-decoration: none;
+     font-size: 1rem;
+     transition: color 0.3s, transform 0.3s;
+    }
+
+    header nav a:hover {
+     color: #24416B; /* Bleu */
+     transform: translateY(-2px);
+    }
+
+    header .auth-buttons {
+      display: flex;
+      gap: 10px;
+    }
+    .dashboard {
             display: flex;
             min-height: 100vh;
-        }
+    }
         .sidebar {
             width: 250px;
-            background: #2c3e50;
+            background: #3498db;
             color: white;
             padding: 20px;
         }
@@ -267,7 +296,7 @@ $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
     <header>
-        <h1>Vide Grenier</h1>
+       <img src="logo_Dash.png" alt="Logo" class="logo">
         <nav>
             <a href="index.php">Accueil</a>
             <a href="about.php">À propos</a>
@@ -321,7 +350,7 @@ $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <textarea name="description" required><?php echo htmlspecialchars($product['description']); ?></textarea>
                     </div>
                     <div class="form-group">
-                        <label>Prix (en €)</label>
+                        <label>Prix (en FCFA)</label>
                         <input type="number" step="0.01" name="price" value="<?php echo htmlspecialchars($product['price']); ?>" required>
                     </div>
                     <div class="form-group">

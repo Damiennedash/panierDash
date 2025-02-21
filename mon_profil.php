@@ -48,99 +48,320 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <title>Mon Profil</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 10px 0;
-            text-align: center;
-        }
-        .dashboard {
-            display: flex;
-            min-height: 100vh;
-        }
-        .sidebar {
-            width: 250px;
-            background: #3498db;
-            color: white;
-            padding: 2rem;
-        }
-        .sidebar h2 {
-            margin-bottom: 2rem;
-            font-size: 1.5rem;
-        }
-        .sidebar ul {
-            list-style: none;
-        }
-        .sidebar li {
-            margin-bottom: 1rem;
-        }
-        .sidebar a {
-            color: white;
-            text-decoration: none;
-            display: block;
-            padding: 0.5rem;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
-        .sidebar a:hover {
-            background: #2980b9;
-        }
-        .main-content {
-            flex: 1;
-            padding: 2rem;
-            background: #f8f9fa;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #45a049;
-        }
-        .error {
-            color: red;
-            margin-bottom: 10px;
-        }
-        .success {
-            color: green;
-            margin-bottom: 10px;
-        }
-    </style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    background: url('background.jpg') no-repeat center center/cover;
+    background-color: rgba(0, 0, 0, 0.5); /* Transparence */
+    color: #fff;
+    overflow-x: hidden;
+    min-height: 100vh; /* Assure que le body prend toute la hauteur de l'écran */
+}
+
+/* HEADER */
+header {
+    background: linear-gradient(90deg, #FFFFFF, #467FD1, #24416B); /* Dégradé */
+    color: #fff;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px); /* Effet de flou */
+}
+
+header .logo {
+    height: 50px;
+}
+
+header nav {
+    display: flex;
+    gap: 20px;
+}
+
+header nav a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.3s, transform 0.3s;
+}
+
+header nav a:hover {
+    color: #24416B; /* Bleu */
+    transform: translateY(-2px);
+}
+
+/* CONTAINER PRINCIPAL */
+.dashboard {
+    display: flex;
+    min-height: 100vh;
+    margin-top: 60px; /* Pour éviter le chevauchement avec le header */
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 260px; /* Ajusté pour s’aligner avec le contenu */
+    background: #3498db;
+    color: white;
+    padding: 20px;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    height: calc(100vh - 60px);
+    overflow-y: auto;
+}
+
+.sidebar h2 {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar li {
+    margin-bottom: 10px;
+}
+
+.sidebar a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 12px;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.sidebar a:hover {
+    background: #2980b9;
+}
+
+/* CONTENU PRINCIPAL */
+.main-content {
+    flex: 1;
+    margin-left: 260px; /* Alignement avec le sidebar */
+    padding: 25px;
+    background: #f8f9fa;
+    color: #333; /* Couleur du texte lisible */
+}
+
+/* FORMULAIRE */
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 1rem;
+    color: #333; /* Texte noir */
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+button:hover {
+    background: #45a049;
+}
+
+.error {
+    color: red;
+    margin-bottom: 10px;
+}
+
+.success {
+    color: green;
+    margin-bottom: 10px;
+}
+
+/* TABLEAU */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background: #3498db;
+    color: white;
+}
+
+table tr:hover {
+    background: #f1f1f1;
+}
+
+/* ORDER STATUS */
+.order-status {
+    font-weight: bold;
+}
+
+.order-status.delivered {
+    color: #4caf50; /* Vert */
+}
+
+.order-status.cancelled {
+    color: #f44336; /* Rouge */
+}
+
+/* BOUTONS */
+.status-buttons button {
+    padding: 8px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 2px;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.status-buttons .delivered {
+    background-color: #4caf50; /* Vert */
+}
+
+.status-buttons .cancelled {
+    background-color: #f44336; /* Rouge */
+}
+
+.status-buttons button:hover {
+    opacity: 0.8; /* Effet de survol */
+}
+
+/* BOUTON AJOUTER UN ARTICLE */
+.add-btn {
+    background: #28a745;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    display: inline-block;
+    transition: background 0.3s;
+}
+
+.add-btn:hover {
+    background: #218838;
+}
+/* FOOTER */
+footer {
+        background: #333;
+        color: white;
+        text-align: center;
+        padding: 10px;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        z-index: 50;
+    }
+
+footer p {
+    margin: 0;
+    font-size: 1rem;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+    .sidebar {
+        width: 230px;
+    }
+
+    .main-content {
+        margin-left: 230px;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 220px;
+    }
+
+    .main-content {
+        margin-left: 220px;
+    }
+
+    header {
+        padding: 10px;
+    }
+
+    header .logo {
+        height: 40px;
+    }
+
+    header nav {
+        gap: 15px;
+    }
+
+    header nav a {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar {
+        width: 100%;
+        position: relative;
+        padding: 10px;
+        height: auto;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    header {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    header nav {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+</style>
 </head>
 <body>
     <header>
-        <h1>Vide Grenier</h1>
+        <img src="logo_Dash.png" alt="Logo" class="logo">
         <nav>
             <a href="index.php">Accueil</a>
             <a href="about.php">À propos</a>

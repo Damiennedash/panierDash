@@ -35,139 +35,186 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mes Articles</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+    body {
+        font-family: 'Poppins', sans-serif;
+        line-height: 1.6;
+        background: url('background.jpg') no-repeat center center/cover;
+        background-color: rgba(0, 0, 0, 0.5); /* Transparence */
+        color: #fff;
+        overflow-x: hidden;
+        min-height: 100vh; /* Assure que le body prend toute la hauteur de l'écran */
+    }
 
-        /* HEADER */
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 15px 0;
-            text-align: center;
-        }
+    /* HEADER */
+    header {
+        background: linear-gradient(90deg, #FFFFFF, #467FD1, #24416B); /* Dégradé */
+        color: #fff;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        backdrop-filter: blur(10px); /* Effet de flou */
+    }
 
-        nav a {
-            color: #fff;
-            text-decoration: none;
-            margin: 0 10px;
-        }
+    header .logo {
+        height: 50px;
+    }
 
-        /* CONTAINER PRINCIPAL */
-        .dashboard {
-            display: flex;
-            width: 100%;
-            min-height: 100vh;
-        }
+    header nav {
+        display: flex;
+        gap: 20px;
+    }
 
-        /* SIDEBAR */
-        .sidebar {
-            width: 250px;
-            background: #2c3e50;
-            color: white;
-            padding: 20px;
-        }
+    header nav a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: color 0.3s, transform 0.3s;
+    }
 
-        .sidebar h2 {
-            margin-bottom: 20px;
-        }
+    header nav a:hover {
+        color: #24416B; /* Bleu */
+        transform: translateY(-2px);
+    }
 
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-        }
+    header .auth-buttons {
+        display: flex;
+        gap: 10px;
+    }
 
-        .sidebar li {
-            margin-bottom: 10px;
-        }
+    /* CONTAINER PRINCIPAL */
+    .dashboard {
+        display: flex;
+        width: 100%;
+        min-height: 100vh;
+        padding-top: 60px; /* Pour éviter le chevauchement avec le header */
+    }
 
-        .sidebar a {
-            color: white;
-            text-decoration: none;
-            display: block;
-            padding: 10px;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
+    /* SIDEBAR */
+    .sidebar {
+        width: 250px;
+        background: #3498db;
+        color: white;
+        padding: 20px;
+        position: fixed;
+        top: 60px;
+        left: 0;
+        height: calc(100vh - 60px);
+        overflow-y: auto;
+    }
 
-        .sidebar a:hover {
-            background: #34495e;
-        }
+    .sidebar h2 {
+        margin-bottom: 20px;
+    }
 
-        /* CONTENU PRINCIPAL */
-        .main-content {
-            flex: 1;
-            padding: 20px;
-            background: #f8f9fa;
-        }
+    .sidebar ul {
+        list-style: none;
+        padding: 0;
+    }
 
-        /* BOUTON AJOUTER UN ARTICLE */
-        .add-btn {
-            background: #28a745;
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            display: inline-block;
-        }
+    .sidebar li {
+        margin-bottom: 10px;
+    }
 
-        /* TABLEAU */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
+    .sidebar a {
+        color: white;
+        text-decoration: none;
+        display: block;
+        padding: 10px;
+        border-radius: 5px;
+        transition: background 0.3s;
+    }
 
-        table th, table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
+    .sidebar a:hover {
+        background: #34495e;
+    }
 
-        table th {
-            background: #f8f9fa;
-        }
+    /* CONTENU PRINCIPAL */
+    .main-content {
+        flex: 1;
+        margin-left: 250px; /* Pour éviter le chevauchement avec la sidebar */
+        padding: 20px;
+        background: #f8f9fa;
+        color: black;
+        overflow-y: auto;
+    }
 
-        table tr:hover {
-            background: #f1f1f1;
-        }
+    /* BOUTON AJOUTER UN ARTICLE */
+    .add-btn {
+        background: #28a745;
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        display: inline-block;
+        transition: background 0.3s;
+    }
 
-        .actions a {
-            color: #007bff;
-            text-decoration: none;
-            margin-right: 10px;
-        }
+    .add-btn:hover {
+        background: #218838;
+    }
 
-        .actions a:hover {
-            text-decoration: underline;
-        }
+    /* TABLEAU */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
 
-        /* FOOTER */
-        footer {
-            background: #333;
-            color: #fff;
-            text-align: center;
-            padding: 10px 0;
-            margin-top: 20px;
-        }
-    </style>
+    table th, table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    table th {
+        background: #f8f9fa;
+    }
+
+    table tr:hover {
+        background: #f1f1f1;
+    }
+
+    .actions a {
+        color: #007bff;
+        text-decoration: none;
+        margin-right: 10px;
+        transition: color 0.3s;
+    }
+
+    .actions a:hover {
+        text-decoration: underline;
+        color: #0056b3;
+    }
+
+    /* FOOTER */
+    footer {
+        background: #333;
+        color: #fff;
+        text-align: center;
+        padding: 10px 0;
+        margin-top: 20px;
+    }
+</style>
+
 </head>
 <body>
     <header>
-        <h1>Vide Grenier</h1>
+     <img src="logo_Dash.png" alt="Logo" class="logo">
         <nav>
             <a href="index.php">Accueil</a>
             <a href="about.php">À propos</a>
@@ -210,7 +257,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <?php else: ?>
                     <?php foreach ($result as $row): ?>
                     <tr>
-                        <td><?= htmlspecialchars($row['name'] ?? 'N/A') ?></td>
+                        <td><?= htmlspecialchars($row['product_name'] ?? 'N/A') ?></td>
                         <td><?= htmlspecialchars($row['description'] ?? 'N/A') ?></td>
                         <td><?= htmlspecialchars($row['price'] ?? 'N/A') ?>FCFA</td>
                         <td><?= htmlspecialchars($row['available_quantity'] ?? 'N/A') ?></td>

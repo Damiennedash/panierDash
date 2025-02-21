@@ -71,77 +71,176 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_order_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mes Achats</title>
     <style>
-        body { font-family: 'Arial', sans-serif; margin: 0; padding: 0; background-color: #fafafa; }
-        header { background-color: #3498db; color: white; padding: 20px 0; text-align: center; font-size: 24px; }
+       body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    background: url('background.jpg') no-repeat center center/cover;
+    background-color: rgba(0, 0, 0, 0.5); /* Transparence */
+    color: #fff;
+    overflow-x: hidden;
+    min-height: 100vh; /* Assure que le body prend toute la hauteur de l'écran */
+    margin: 0;
+}
 
-        .dashboard { display: flex; min-height: 100vh; }
+/* HEADER */
+header {
+    background: linear-gradient(90deg, #FFFFFF, #467FD1, #24416B); /* Dégradé */
+    color: #fff;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px); /* Effet de flou */
+}
 
-        /* Sidebar */
-        .sidebar {
-            width: 250px;
-            background-color: #2980b9;
-            color: white;
-            padding: 20px;
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            box-shadow: 2px 0px 10px rgba(0,0,0,0.1);
-        }
-        .sidebar h2 { font-size: 22px; }
-        .sidebar ul { list-style: none; padding: 0; }
-        .sidebar li { margin-bottom: 15px; }
-        .sidebar a { color: white; text-decoration: none; padding: 12px; display: block; border-radius: 8px; font-size: 16px; transition: background 0.3s; }
-        .sidebar a:hover { background-color: #1f6fb2; }
+header .logo {
+    height: 50px;
+}
 
-        /* Main content */
-        .main-content {
-            margin-left: 270px;
-            padding: 30px;
-            background-color: #f8f9fa;
-        }
+header nav {
+    display: flex;
+    gap: 15px;
+}
 
-        .merchant-section {
-            background-color: white;
-            padding: 25px;
-            margin-bottom: 25px;
-            border-radius: 8px;
-            box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
-        }
-        .merchant-section h3 {
-            margin-bottom: 20px;
-            font-size: 22px;
-            color: #2c3e50;
-        }
+header nav a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.3s, transform 0.3s;
+    }
+ header nav a:hover {
+    color: #24416B; /* Bleu */
+    transform: translateY(-2px);
+}
 
-        /* Table styling */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 2px solid #ddd;
-            font-size: 16px;
-        }
-        th {
-            background-color: #3498db;
-            color: white;
-        }
+/* Dashboard */
+.dashboard {
+    display: flex;
+    margin-top: 70px; /* Crée un espace pour le header fixe */
+    height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background-color: #3498db;
+    color: white;
+    padding: 20px;
+    position: fixed;
+    top: 70px; /* Positionne le sidebar sous le header */
+    left: 0;
+    bottom: 0;
+    box-shadow: 2px 0px 10px rgba(0,0,0,0.1);
+    z-index: 999;
+}
+
+.sidebar h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar li {
+    margin-bottom: 15px;
+}
+
+.sidebar a {
+    color: white;
+    text-decoration: none;
+    padding: 12px;
+    display: block;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: background 0.3s;
+}
+
+.sidebar a:hover {
+    background-color: #1f6fb2;
+}
+
+/* Main content */
+.main-content {
+    margin-left: 270px; /* Espace pour le sidebar */
+    padding: 30px;
+    background-color: #f8f9fa;
+    color: #000; /* Texte en noir */
+    flex: 1;
+    margin-top: 20px; /* Création d'un espace sous le header */
+}
+
+/* Section Marchand */
+.merchant-section {
+    background-color: white;
+    padding: 25px;
+    margin-bottom: 25px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+}
+
+.merchant-section h3 {
+    margin-bottom: 20px;
+    font-size: 22px;
+    color: #2c3e50;
+}
+
+/* Table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 2px solid #ddd;
+    font-size: 16px;
+}
+
+th {
+    background-color: #3498db;
+    color: white;
+}
+
+/* Footer */
+footer {
+    background-color: #24416B;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+footer p {
+    margin: 0;
+    font-size: 14px;
+}
+
     </style>
 </head>
 <body>
-    <header>Mes Achats</header>
+    <header>
+     <img src="logo_Dash.png" alt="Logo" class="logo">             Mes Achats
+    </header>
 
     <div class="dashboard">
         <!-- Sidebar -->
         <div class="sidebar">
             <h2>Menu Étudiant</h2>
             <ul>
-                <li><a href="student_dashboard.php">Accueil</a></li>
-                <li><a href="mes_favoris.php">Mes Favoris</a></li>
+            <li><a href="student_dashboard.php">Accueil</a></li>
+                <li><a href="suivi_commande.php">Mes commandes validés</a></li>
                 <li><a href="mes_achats.php">Mes Achats</a></li>
                 <li><a href="messages.php">Messages</a></li>
                 <li><a href="mon_profil.php">Mon Profil</a></li>

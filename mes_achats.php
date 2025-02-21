@@ -121,7 +121,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirm_orders'])) {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -129,23 +128,74 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirm_orders'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mes Achats</title>
     <style>
-    body { font-family: 'Arial', sans-serif; margin: 0; padding: 0; background-color: #fafafa; }
-    header { background-color: #3498db; color: white; padding: 20px 0; text-align: center; font-size: 24px; }
+     * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body {
+        font-family: 'Poppins', sans-serif;
+        line-height: 1.6;
+        background: url('background.jpg') no-repeat center center/cover;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: #fff;
+        overflow-x: hidden;
+        min-height: 100vh;
+    }
 
-    .dashboard { display: flex; min-height: 100vh; }
+    /* HEADER */
+    header {
+        background: linear-gradient(90deg, #FFFFFF, #467FD1, #24416B); /* Dégradé */
+        color: #fff;
+        padding: 10px 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        backdrop-filter: blur(10px); /* Effet de flou */
+    }
 
-    /* Sidebar */
+    header .logo {
+        height: 50px;
+    }
+
+    header nav {
+        display: flex;
+        gap: 15px;
+    }
+
+    header nav a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: color 0.3s, transform 0.3s;
+    }
+
+    header nav a:hover {
+        color: #24416B; /* Bleu */
+        transform: translateY(-2px);
+    }
+
+    header .auth-buttons {
+        display: flex;
+        gap: 10px;
+    }
     .sidebar {
+        position: fixed;
+        top: 60px;
+        left: 0;
         width: 250px;
-        background-color: #2980b9;
+        height: calc(100vh - 60px);
+        background: #3498db;
         color: white;
         padding: 20px;
-        height: 100vh;
-        position: fixed;
-        top: 0;
-        left: 0;
-        box-shadow: 2px 0px 10px rgba(0,0,0,0.1);
+        overflow-y: auto;
     }
+
     .sidebar h2 { font-size: 22px; }
     .sidebar ul { list-style: none; padding: 0; }
     .sidebar li { margin-bottom: 15px; }
@@ -156,7 +206,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirm_orders'])) {
     .main-content {
         margin-left: 270px;
         padding: 30px;
-        background-color: #f8f9fa;
+        background-color: rgba(0, 0, 0, 0.5); /* Transparence */
+        color: #000;
     }
 
     .merchant-section {
@@ -217,7 +268,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirm_orders'])) {
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.5);
+        background: rgba(0, 0, 0, 0.1);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -345,7 +396,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirm_orders'])) {
 </style>
 </head>
 <body>
-    <header>Mes Achats</header>
+    <header>
+        <img src="logo_Dash.png" alt="Logo" class="logo">  
+        Mes Achats
+    </header>
 
     <div class="dashboard">
         <!-- Sidebar -->
@@ -353,7 +407,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirm_orders'])) {
             <h2>Menu Étudiant</h2>
             <ul>
                 <li><a href="student_dashboard.php">Accueil</a></li>
-                <li><a href="suivi_commande.php">Mes commandes validés</a></li>
+                <li><a href="suivi_commande.php">Mes commandes validées</a></li>
                 <li><a href="mes_achats.php">Mes Achats</a></li>
                 <li><a href="messages.php">Messages</a></li>
                 <li><a href="mon_profil.php">Mon Profil</a></li>
@@ -451,7 +505,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['confirm_orders'])) {
                                 <label for="numero">Numéro de téléphone :</label>
                                 <input type="text" name="numero" placeholder="Ex : 99995665" required pattern="^(96|97|98|99|78|79)\d{6}$">
                                 <p>Total : <strong><?= number_format($merchantTotals[$merchant], 2) ?> FCFA</strong></p>
-                                <button type="submit" class="btn btn-confirm">Confirmer</button>
+                                <button type="submit" class="btn btn-confirm" >Confirmer</button>
                             </form>
                             <!-- Loader pour Moov -->
                             <div id="loader-moov" class="loader"></div>

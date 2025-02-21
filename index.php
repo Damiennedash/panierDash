@@ -8,7 +8,7 @@ try {
               FROM products p 
               JOIN users u ON p.id_merchant = u.id_user 
               ORDER BY p.id_product DESC 
-              LIMIT 5";
+              LIMIT 10";
     $stmt = $pdo->query($query);
     $products = $stmt->fetchAll();
 } catch (PDOException $e) {
@@ -34,17 +34,21 @@ try {
         body {
             font-family: 'Poppins', sans-serif;
             line-height: 1.6;
-            background: #000; /* Fond noir */
+            background: url('background.jpg') no-repeat center center/cover;
+            background-color: rgba(0, 0, 0, 0.5); /* Transparence */
             color: #fff;
             overflow-x: hidden;
+            min-height: 100vh; /* Assure que le body prend toute la hauteur de l'écran */
         }
 
         /* Header */
         header {
-            background: rgba(20, 20, 20, 0.9); /* Transparence */
+            background: linear-gradient(90deg,rgb(242, 215, 178), #D8840E, #C70C0C); /* Dégradé */
             color: #fff;
-            padding: 15px 0;
-            text-align: center;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
             position: fixed;
             width: 100%;
@@ -53,18 +57,13 @@ try {
             backdrop-filter: blur(10px); /* Effet de flou */
         }
 
-        header h1 {
-            font-size: 2rem;
-            margin-bottom: 10px;
-            color: #e50914; /* Rouge Netflix */
-            font-weight: 600;
+        header .logo {
+            height: 50px;
         }
 
         header nav {
             display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 15px;
+            gap: 20px;
         }
 
         header nav a {
@@ -75,18 +74,44 @@ try {
         }
 
         header nav a:hover {
-            color: #e50914;
-            transform: translateY(-2px); /* Effet de levée */
+            color: #24416B; /* Bleu */
+            transform: translateY(-2px);
+        }
+
+        header .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        header .auth-buttons .btn {
+            padding: 8px 16px;
+            background-color: #24416B; /* Bleu */
+            color: #fff;
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        header .auth-buttons .btn:hover {
+            background-color: #1A2F4F; /* Bleu plus foncé */
+            transform: translateY(-3px);
         }
 
         /* Hero Section */
         .hero {
             text-align: center;
             padding: 150px 20px 80px; /* Ajustement pour le header fixe */
-            background: #000; /* Fond noir */
+            background: url('background.jpg') no-repeat center center/cover;
+            background-color: rgba(0, 0, 0, 0.5); /* Transparence */
             color: #fff;
             position: relative;
             overflow: hidden;
+            min-height: 100vh; /* Prend toute la hauteur de l'écran */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         .hero h1 {
@@ -101,28 +126,10 @@ try {
             animation: fadeIn 2s ease-in-out;
         }
 
-        .hero .btn {
-            display: inline-block;
-            padding: 12px 24px;
-            margin: 10px;
-            background-color: #e50914; /* Rouge Netflix */
-            color: #fff;
-            text-decoration: none;
-            border-radius: 30px;
-            font-size: 1rem;
-            transition: background-color 0.3s, transform 0.3s;
-            animation: fadeIn 2.5s ease-in-out;
-        }
-
-        .hero .btn:hover {
-            background-color: #b20710; /* Rouge plus foncé */
-            transform: translateY(-5px);
-        }
-
         /* Products Section */
         .products {
             padding: 60px 20px;
-            background: #141414; /* Fond sombre */
+            background-color: rgba(0, 0, 0, 0.7); /* Transparence */
         }
 
         .products h2 {
@@ -135,16 +142,16 @@ try {
 
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            padding: 20px 0;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            padding: 15px 0;
         }
 
         .product-card {
             background: #333;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             transition: transform 0.3s, box-shadow 0.3s;
             position: relative;
             overflow: hidden;
@@ -152,14 +159,14 @@ try {
 
         .product-card:hover {
             transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
         }
 
         .product-card img {
             max-width: 100%;
             height: auto;
             border-radius: 10px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             transition: transform 0.3s;
         }
 
@@ -181,7 +188,7 @@ try {
 
         .product-card .btn {
             display: inline-block;
-            padding: 10px 20px;
+            padding: 10px 15px;
             background-color: #e50914; /* Rouge Netflix */
             color: #fff;
             text-decoration: none;
@@ -193,6 +200,55 @@ try {
         .product-card .btn:hover {
             background-color: #b20710; /* Rouge plus foncé */
             transform: translateY(-3px);
+        }
+
+        /* About Section */
+        .about {
+            padding: 60px 20px;
+            background-color: rgba(0, 0, 0, 0.9); /* Transparence */
+            text-align: center;
+        }
+
+        .about h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .about p {
+            font-size: 1.2rem;
+            color: #ccc;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 60px 20px;
+            background-color: rgba(0, 0, 0, 0.9); /* Transparence */
+            text-align: center;
+        }
+
+        .contact h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .contact p {
+            font-size: 1.2rem;
+            color: #ccc;
+            margin-bottom: 10px;
+        }
+
+        .contact a {
+            color:rgb(31, 106, 211); /* Bleu */
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .contact a:hover {
+            color:rgb(15, 96, 218); /* Bleu plus foncé */
         }
 
         /* Footer */
@@ -221,29 +277,43 @@ try {
             header h1 {
                 font-size: 1.8rem;
             }
-
+            header nav {
+                flex-direction: column;
+                gap: 10px;
+            }
+            header .auth-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
             .hero h1 {
                 font-size: 2rem;
             }
-
             .hero p {
                 font-size: 1rem;
             }
-
             .products h2 {
                 font-size: 1.8rem;
             }
-
             .product-grid {
                 grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             }
-
             .product-card h3 {
                 font-size: 1.3rem;
             }
-
             .product-card p {
                 font-size: 0.9rem;
+            }
+            .about h2 {
+                font-size: 1.8rem;
+            }
+            .about p {
+                font-size: 1rem;
+            }
+            .contact h2 {
+                font-size: 1.8rem;
+            }
+            .contact p {
+                font-size: 1rem;
             }
         }
 
@@ -251,29 +321,35 @@ try {
             header h1 {
                 font-size: 1.5rem;
             }
-
             .hero h1 {
                 font-size: 1.8rem;
             }
-
             .hero p {
                 font-size: 0.9rem;
             }
-
             .products h2 {
                 font-size: 1.5rem;
             }
-
             .product-grid {
                 grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             }
-
             .product-card h3 {
                 font-size: 1.2rem;
             }
-
             .product-card p {
                 font-size: 0.8rem;
+            }
+            .about h2 {
+                font-size: 1.5rem;
+            }
+            .about p {
+                font-size: 0.9rem;
+            }
+            .contact h2 {
+                font-size: 1.5rem;
+            }
+            .contact p {
+                font-size: 0.9rem;
             }
         }
 
@@ -286,24 +362,22 @@ try {
 </head>
 <body>
     <header>
-        <h1>Vide Grenier</h1>
+        <img src="logo_Dash.png" alt="Logo" class="logo">
         <nav>
-            <a href="index.php">Accueil</a>
-            <a href="about.php">À propos</a>
-            <?php if (isset($_SESSION['user_id'])): ?>
-                <a href="logout.php">Déconnexion</a>
-            <?php else: ?>
-                <a href="login.php">Connexion</a>
-                <a href="register.php">Inscription</a>
-            <?php endif; ?>
+            <a href="#accueil">Accueil</a>
+            <a href="#apropos">À propos</a>
+            <a href="#contact">Contactez-nous</a>
         </nav>
+        <div class="auth-buttons">
+            <a href="login.php" class="btn">Se connecter</a>
+            <a href="register.php" class="btn">S'inscrire</a>
+            
+        </div>
     </header>
 
-    <section class="hero">
+    <section id="accueil" class="hero">
         <h1>Bienvenue sur Vide Grenier</h1>
         <p>Découvrez les produits disponibles et faites vos achats en ligne !</p>
-        <a href="login.php" class="btn">Se connecter</a>
-        <a href="register.php" class="btn">S'inscrire</a>
     </section>
 
     <section class="products">
@@ -314,20 +388,30 @@ try {
         <div class="product-grid">
             <?php foreach ($products as $product): ?>
                 <div class="product-card">
-                    <h3><?php echo htmlspecialchars($product['name']); ?></h3>
+                    <h3><?php echo htmlspecialchars($product['product_name']); ?></h3>
                     <?php if (!empty($product['image'])): ?>
-                        <img src="<?php echo htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                        <img src="<?php echo htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($product['product_name']); ?>">
                     <?php endif; ?>
                     <p><?php echo htmlspecialchars($product['description']); ?></p>
-                    <p><strong>Prix :</strong> <?php echo htmlspecialchars($product['price']); ?> €</p>
-                    <p><strong>Vendeur :</strong> <?php echo htmlspecialchars($product['merchant_name']); ?></p>
+                    <p><strong>Prix :</strong> <?php echo htmlspecialchars($product['price']); ?> FCFA</p>
                     <p><strong>Quantité disponible :</strong> <?php echo htmlspecialchars($product['available_quantity']); ?></p>
                     <?php if (isset($_SESSION['user_id']) && $_SESSION['user_type'] === 'Student'): ?>
-                        <a href="order.php?id=<?php echo $product['id_product']; ?>" class="btn">Commander</a>
+                        <a href="register.php?id=<?php echo $product['id_product']; ?>" class="btn">Commander</a>
                     <?php endif; ?>
                 </div>
             <?php endforeach; ?>
         </div>
+    </section>
+
+    <section id="apropos" class="about">
+        <h2>À propos</h2>
+        <p>Nous sommes une entreprise qui excelle dans les relations clients étudiants à Lomé Business School. Nous mettons en avant le commerce des étudiants sous une forme plus digitalisée et simple.</p>
+    </section>
+
+    <section id="contact" class="contact">
+        <h2>Contactez-nous</h2>
+        <p>Téléphone : <a href="https://wa.me/22893365551">+228 93365551</a></p>
+        <p>Email : <a href="mailto:djata.damienne@lomebs.com">djata.damienne@lomebs.com</a></p>
     </section>
 
     <footer>

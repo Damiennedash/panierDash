@@ -52,118 +52,197 @@ $salesData = getSalesByPeriod($pdo, $merchant_id, $period);
 <head>
     <title>Statistiques</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 10px 0;
-            text-align: center;
-        }
-        .dashboard {
-            display: flex;
-            min-height: 100vh;
-        }
-        .sidebar {
-            width: 250px;
-            background: #2c3e50;
-            color: white;
-            padding: 2rem;
-        }
-        .sidebar h2 {
-            margin-bottom: 2rem;
-            font-size: 1.5rem;
-        }
-        .sidebar ul {
-            list-style: none;
-        }
-        .sidebar li {
-            margin-bottom: 1rem;
-        }
-        .sidebar a {
-            color: white;
-            text-decoration: none;
-            display: block;
-            padding: 0.5rem;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
-        .sidebar a:hover {
-            background: #34495e;
-        }
-        .main-content {
-            flex: 1;
-            padding: 2rem;
-            background: #f8f9fa;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-        .period-selector {
-            margin-bottom: 2rem;
-        }
-        .period-selector button {
-            background: #2c3e50;
-            color: white;
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-right: 0.5rem;
-        }
-        .period-selector button:hover {
-            background: #34495e;
-        }
-        .logout-btn {
-            background: #e74c3c;
-            color: white;
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-        }
-        .logout-btn:hover {
-            background: #c0392b;
-        }
-        footer {
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            padding: 10px 0;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
-        .stat-card {
-            background-color: #fff;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .stat-card h3 {
-            margin-bottom: 0.5rem;
-            font-size: 1.2rem;
-            color: #333;
-        }
-        .number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #2c3e50;
-        }
-    </style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        line-height: 1.6;
+        background: url('background.jpg') no-repeat center center/cover;
+        background-color: rgba(0, 0, 0, 0.5); /* Transparence */
+        color: #fff;
+        overflow-x: hidden;
+        min-height: 100vh; /* Assure que le body prend toute la hauteur de l'écran */
+    }
+
+    /* HEADER */
+    header {
+        background: linear-gradient(90deg, #FFFFFF, #467FD1, #24416B); /* Dégradé */
+        color: #fff;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        backdrop-filter: blur(10px); /* Effet de flou */
+    }
+
+    header .logo {
+        height: 50px;
+    }
+
+    header nav {
+        display: flex;
+        gap: 20px;
+    }
+
+    header nav a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: color 0.3s, transform 0.3s;
+    }
+
+    header nav a:hover {
+        color: #24416B; /* Bleu */
+        transform: translateY(-2px);
+    }
+
+    header .auth-buttons {
+        display: flex;
+        gap: 10px;
+    }
+
+    /* CONTAINER PRINCIPAL */
+    .dashboard {
+        display: flex;
+        min-height: 100vh;
+        margin-top: 60px; /* Pour éviter le chevauchement avec le header */
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+        width: 250px;
+        background: #3498db; /* Bleu de commande */
+        color: white;
+        padding: 2rem;
+        position: fixed;
+        top: 60px;
+        left: 0;
+        height: calc(100vh - 60px);
+        overflow-y: auto;
+    }
+
+    .sidebar h2 {
+        margin-bottom: 2rem;
+        font-size: 1.5rem;
+    }
+
+    .sidebar ul {
+        list-style: none;
+    }
+
+    .sidebar li {
+        margin-bottom: 1rem;
+    }
+
+    .sidebar a {
+        color: white;
+        text-decoration: none;
+        display: block;
+        padding: 0.5rem;
+        border-radius: 5px;
+        transition: background 0.3s;
+    }
+
+    .sidebar a:hover {
+        background: #3498db; /* Bleu plus sombre au survol */
+    }
+
+    /* CONTENU PRINCIPAL */
+    .main-content {
+        flex: 1;
+        margin-left: 250px; /* Pour éviter le chevauchement avec la sidebar */
+        padding: 2rem;
+        background: #f8f9fa;
+        color: #000; /* Contenu en noir */
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    /* SELECTEUR DE PÉRIODE */
+    .period-selector {
+        margin-bottom: 2rem;
+    }
+
+    .period-selector button {
+        background: #2c3e50;
+        color: white;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-right: 0.5rem;
+    }
+
+    .period-selector button:hover {
+        background: #34495e;
+    }
+
+    /* BOUTON DE DÉCONNEXION */
+    .logout-btn {
+        background: #e74c3c;
+        color: white;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .logout-btn:hover {
+        background: #c0392b;
+    }
+
+    /* CARTE DE STATISTIQUES */
+    .stat-card {
+        background-color: #fff;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-card h3 {
+        margin-bottom: 0.5rem;
+        font-size: 1.2rem;
+        color: #333;
+    }
+
+    .number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #2c3e50;
+    }
+
+    /* FOOTER */
+    footer {
+        background-color: #34495e; /* Bleu similaire à la sidebar */
+        color: #fff;
+        text-align: center;
+        padding: 10px 0;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+    }
+</style>
+
 </head>
 <body>
     <header>
-        <h1>Vide Grenier</h1>
+        <img src="logo_Dash.png" alt="Logo" class="logo">
         <nav>
             <a href="index.php">Accueil</a>
             <a href="about.php">À propos</a>

@@ -55,97 +55,197 @@ if (isset($_POST['update_status']) && isset($_POST['order_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des Commandes</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 10px;
-            text-align: center;
-        }
-        .dashboard {
-            display: flex;
-            min-height: 100vh;
-        }
-        .sidebar {
-            width: 250px;
-            background: #3498db;
-            color: white;
-            padding: 20px;
-        }
-        .sidebar h2 {
-            font-size: 1.5rem;
-        }
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-        }
-        .sidebar li {
-            margin-bottom: 10px;
-        }
-        .sidebar a {
-            color: white;
-            text-decoration: none;
-            display: block;
-            padding: 10px;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
-        .sidebar a:hover {
-            background: #2980b9;
-        }
-        .main-content {
-            flex: 1;
-            padding: 20px;
-            background: #f8f9fa;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background: #3498db;
-            color: white;
-        }
-        .order-status {
-            font-weight: bold;
-        }
-        .order-status.delivered {
-            color: #4caf50;
-        }
-        .order-status.cancelled {
-            color: #f44336;
-        }
-        .status-buttons button {
-            padding: 8px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            margin: 2px;
-            color: white;
-        }
-        .status-buttons .delivered {
-            background-color: #4caf50;
-        }
-        .status-buttons .cancelled {
-            background-color: #f44336;
-        }
-    </style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        line-height: 1.6;
+        background: url('background.jpg') no-repeat center center/cover;
+        background-color: rgba(0, 0, 0, 0.5); /* Transparence */
+        color: #fff;
+        overflow-x: hidden;
+        min-height: 100vh; /* Assure que le body prend toute la hauteur de l'écran */
+    }
+
+    /* HEADER */
+    header {
+        background: linear-gradient(90deg, #FFFFFF, #467FD1, #24416B); /* Dégradé */
+        color: #fff;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        backdrop-filter: blur(10px); /* Effet de flou */
+    }
+
+    header .logo {
+        height: 50px;
+    }
+
+    header nav {
+        display: flex;
+        gap: 20px;
+    }
+
+    header nav a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: color 0.3s, transform 0.3s;
+    }
+
+    header nav a:hover {
+        color: #24416B; /* Bleu */
+        transform: translateY(-2px);
+    }
+
+    /* CONTAINER PRINCIPAL */
+    .dashboard {
+        display: flex;
+        min-height: 100vh;
+        margin-top: 60px; /* Pour éviter le chevauchement avec le header */
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+        width: 250px;
+        background: #3498db;
+        color: white;
+        padding: 20px;
+        position: fixed;
+        top: 60px;
+        left: 0;
+        height: calc(100vh - 60px);
+        overflow-y: auto;
+    }
+
+    .sidebar h2 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+
+    .sidebar ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .sidebar li {
+        margin-bottom: 10px;
+    }
+
+    .sidebar a {
+        color: white;
+        text-decoration: none;
+        display: block;
+        padding: 10px;
+        border-radius: 5px;
+        transition: background 0.3s;
+    }
+
+    .sidebar a:hover {
+        background: #2980b9;
+    }
+
+    /* CONTENU PRINCIPAL */
+    .main-content {
+        flex: 1;
+        margin-left: 250px; /* Pour éviter le chevauchement avec la sidebar */
+        padding: 20px;
+        background: #f8f9fa;
+        color: #333; /* Changer la couleur du texte pour le rendre lisible */
+    }
+
+    /* TABLEAU */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    th, td {
+        padding: 9px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background: #3498db;
+        color: white;
+    }
+
+    table tr:hover {
+        background: #f1f1f1;
+    }
+
+    /* ORDER STATUS */
+    .order-status {
+        font-weight: bold;
+    }
+
+    .order-status.delivered {
+        color: #4caf50; /* Vert */
+    }
+
+    .order-status.cancelled {
+        color: #f44336; /* Rouge */
+    }
+
+    /* BUTTONS */
+    .status-buttons button {
+        padding: 8px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        margin: 2px;
+        color: white;
+        transition: background-color 0.3s ease;
+    }
+
+    .status-buttons .delivered {
+        background-color: #4caf50; /* Vert */
+    }
+
+    .status-buttons .cancelled {
+        background-color: #f44336; /* Rouge */
+    }
+
+    .status-buttons button:hover {
+        opacity: 0.8; /* Effet de survol */
+    }
+
+    /* BOUTON AJOUTER UN ARTICLE */
+    .add-btn {
+        background: #28a745;
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        display: inline-block;
+        transition: background 0.3s;
+    }
+
+    .add-btn:hover {
+        background: #218838;
+    }
+</style>
+
 </head>
 <body>
     <header>
+        <img src="logo_Dash.png" alt="Logo" class="logo">
         <h1>Gestion des Commandes</h1>
     </header>
 

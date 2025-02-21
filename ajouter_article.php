@@ -90,147 +90,218 @@ $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <title>Ajouter un Article</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 10px 0;
-            text-align: center;
-        }
-        header nav {
-            margin-top: 10px;
-        }
-        header nav a {
-            color: #fff;
-            text-decoration: none;
-            margin: 0 10px;
-        }
-        header nav a:hover {
-            text-decoration: underline;
-        }
-        .dashboard {
-            display: flex;
-            min-height: 100vh;
-        }
-        .sidebar {
-            width: 250px;
-            background: #2c3e50;
-            color: white;
-            padding: 20px;
-        }
-        .sidebar h2 {
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-        }
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-        }
-        .sidebar li {
-            margin-bottom: 10px;
-        }
-        .sidebar a {
-            color: white;
-            text-decoration: none;
-            display: block;
-            padding: 10px;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
-        .sidebar a:hover {
-            background: #34495e;
-        }
-        .main-content {
-            flex: 1;
-            padding: 20px;
-            background: #f8f9fa;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        .form-group textarea {
-            resize: vertical;
-            height: 100px;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        button:hover {
-            background: #45a049;
-        }
-        .error {
-            color: red;
-            margin-bottom: 10px;
-            padding: 10px;
-            background: #ffebee;
-            border-radius: 4px;
-            border: 1px solid #ffcdd2;
-        }
-        .success {
-            color: green;
-            margin-bottom: 10px;
-            padding: 10px;
-            background: #e8f5e9;
-            border-radius: 4px;
-            border: 1px solid #c8e6c9;
-        }
-        .logout-btn {
-            background: #e74c3c;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-        }
-        .logout-btn:hover {
-            background: #c0392b;
-        }
-    </style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        line-height: 1.6;
+        background: url('background.jpg') no-repeat center center/cover;
+        background-color: rgba(0, 0, 0, 0.5); /* Transparence */
+        color: #fff;
+        overflow-x: hidden;
+        min-height: 100vh;
+    }
+
+    /* Header */
+    header {
+        background: linear-gradient(90deg, #FFFFFF, #467FD1, #24416B); /* Dégradé */
+        color: #fff;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        backdrop-filter: blur(10px); /* Effet de flou */
+    }
+
+    header .logo {
+        height: 50px;
+    }
+
+    header nav {
+        display: flex;
+        gap: 20px;
+    }
+
+    header nav a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: color 0.3s, transform 0.3s;
+    }
+
+    header nav a:hover {
+        color: #24416B; /* Bleu */
+        transform: translateY(-2px);
+    }
+
+    .dashboard {
+        display: flex;
+        min-height: 100vh;
+        padding-top: 60px; /* Pour éviter que le contenu soit caché sous le header */
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+        width: 250px;
+        background: #3498db; /* Bleu principal */
+        color: white;
+        padding: 20px;
+        position: fixed;
+        top: 60px;
+        left: 0;
+        height: calc(100vh - 60px);
+        overflow-y: auto;
+    }
+
+    .sidebar h2 {
+        margin-bottom: 20px;
+        font-size: 1.5rem;
+    }
+
+    .sidebar ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .sidebar li {
+        margin-bottom: 10px;
+    }
+
+    .sidebar a {
+        color: white;
+        text-decoration: none;
+        display: block;
+        padding: 10px;
+        border-radius: 5px;
+        transition: background 0.3s;
+    }
+
+    .sidebar a:hover {
+        background: #2980b9; /* Bleu plus foncé au survol */
+    }
+
+    /* CONTENU PRINCIPAL */
+    .main-content {
+        flex: 1;
+        margin-left: 250px; /* Pour laisser de la place à la sidebar */
+        padding: 20px;
+        background: #f8f9fa;
+        overflow-y: auto;
+        margin-top: 60px; /* Ajout d'une marge en haut pour compenser le header fixe */
+        color: black; /* Texte en noir */
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    .form-group textarea {
+        resize: vertical;
+        height: 100px;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        background: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    button:hover {
+        background: #45a049;
+    }
+
+    .error {
+        color: red;
+        margin-bottom: 10px;
+        padding: 10px;
+        background: #ffebee;
+        border-radius: 4px;
+        border: 1px solid #ffcdd2;
+    }
+
+    .success {
+        color: green;
+        margin-bottom: 10px;
+        padding: 10px;
+        background: #e8f5e9;
+        border-radius: 4px;
+        border: 1px solid #c8e6c9;
+    }
+
+    .logout-btn {
+        background: #e74c3c;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .logout-btn:hover {
+        background: #c0392b;
+    }
+
+    /* PIED DE PAGE */
+    footer {
+        text-align: center;
+        padding: 15px;
+        background: #333;
+        color: white;
+        margin-top: 20px;
+    }
+</style>
+
 </head>
 <body>
     <header>
-        <h1>Vide Grenier</h1>
+        <img src="logo_Dash.png" alt="Logo" class="logo">
         <nav>
             <a href="index.php">Accueil</a>
             <a href="about.php">À propos</a>
